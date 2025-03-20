@@ -1,21 +1,24 @@
 import express from 'express'
 import User from '../models/User.js'
+import { registerUser,loginUser,getUser,logoutUser} from '../controls/usercontrols.js';
+import { body } from 'express-validator';
+import { authUser } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 
-router.post('/register', async (req, res) => {     //registering
-    const { firstName, lastName, email, password } = req.body;
+router.post('/register',[
+body('email').isEmail().withMessage('Invalid Email'),
+body('firstName').isLength({min:3}).withMessage('First Name must be more then 3 characters'),
+ body('password').isLength({min:6}).withMessage('Password must be more thsn 6 letters')
+],registerUser);
 
-    try {
-        const newUser = new User({ firstName, lastName, email, password });
-        const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ error: 'Failed to create user' });
-    }
-});
+router.post('/login',[
+    body('email').isEmail().withMessage('Invalid Email'),
+    body('password').isLength({min:6}).withMessage('Password must be more thsn 6 letters')
+],loginUser);
 
+router.get('/getUser',authUser,getUser);
 
+router.post('/logout',authUser,logoutUser);
 export default router;
