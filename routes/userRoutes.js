@@ -9,8 +9,8 @@ const router = express.Router();
 
 router.post('/register',[
 body('email').isEmail().withMessage('Invalid Email'),
-body('firstName').isLength({min:3}).withMessage('First Name must be more then 3 characters'),
- body('password').isLength({min:6}).withMessage('Password must be more thsn 6 letters')
+body('firstName').isLength({min:3}).withMessage('First Name must be more than 3 characters'),
+ body('password').isLength({min:6}).withMessage('Password must be more than 6 letters')
 ],registerUser);
 
 router.post('/login',[
