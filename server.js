@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import env from 'dotenv';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import eWasteRoutes from './routes/eWasteRoutes.js';
 
 const app = express();
 const port = 5000;
@@ -23,6 +25,9 @@ mongoose
 
 //routes
 app.use('/api/auth', userRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/e-waste", eWasteRoutes);
+app.use("/uploads", express.static("uploads"));
 
 
 app.listen(port, () => {

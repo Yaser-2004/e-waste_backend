@@ -28,6 +28,9 @@ export async function registerUser(req,res,next) {
     }
     
 }
+
+
+
 export async function loginUser(req,res,next) {
     const error=validationResult(req);
     if(!error.isEmpty()){
@@ -45,9 +48,15 @@ export async function loginUser(req,res,next) {
     const token=await user.generateAuthToken();
     return res.status(200).json({token,user});
 }
+
+
+
 export async function getUser(req,res,next) {
     return res.status(200).json({user: req.user});
 }
+
+
+
 export async function logoutUser(req,res,next) {
     try{
         res.clearCookie('token');
