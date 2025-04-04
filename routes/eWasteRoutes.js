@@ -16,18 +16,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post("/upload",  async (req, res) => {
+router.post("/upload", upload.single("image"), async (req, res) => {
   try {
-    const { userId, description, operation } = req.body;
+    const { userId, itemName, description, operation } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    const imagePath = req.file ? req.file.path : null;
+
     const newWaste = new EWaste({
       userId,
+      itemName,
       description,
+      imageUrl: imagePath, 
       operation,
       location: user.location,
     });

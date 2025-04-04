@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 const eWasteSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  imageUrl: { type: String},
+  itemName: { type: String, required: true },
   description: { type: String, required: true },
+  imageUrl: { type: String},
   operation: { type: String, enum: ["Recycle", "Destroy", "Repair"], required: true },
   status: { type: String, enum: ["Pending", "Processed", "Recycled", "Repaired"], default: "Pending" },
   location: { type: String, required: true },
