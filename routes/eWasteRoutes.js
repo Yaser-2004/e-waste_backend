@@ -6,18 +6,11 @@ import User from '../models/User.js';
 const router = express.Router();
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
+
 
 const upload = multer({ storage });
 
-router.post("/upload", upload.single("image"), async (req, res) => {
+router.post("/upload",  async (req, res) => {
   try {
     const { userId, description, operation } = req.body;
 
@@ -26,11 +19,10 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    
 
     const newWaste = new EWaste({
       userId,
-      imageUrl,
       description,
       operation,
       location: user.location,
@@ -42,5 +34,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 export default router;
