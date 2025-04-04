@@ -6,13 +6,18 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import eWasteRoutes from './routes/eWasteRoutes.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const port = 5000;
 
 //middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // frontend origin
+    credentials: true                
+  }));
+app.use(cookieParser());
 env.config();
 
 //mongoDb connection

@@ -5,7 +5,7 @@ const eWasteSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },
   description: { type: String, required: true },
   operation: { type: String, enum: ["Recycle", "Destroy", "Repair"], required: true },
-  status: { type: String, enum: ["Pending", "Processing", "Accepted", "Completed"], default: "Pending" },
+  status: { type: String, enum: ["Pending", "Processing", "Accepted", "For Sale"], default: "Pending" },
   location: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });

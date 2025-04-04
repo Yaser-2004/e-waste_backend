@@ -7,7 +7,10 @@ import BlacklistToken from "../models/blacklisttoken.js";
 export async function authUser(req, res, next) {
     try{
         const token=req.cookies?.token||req.headers.authorization?.split(" ")[1];
+        // console.log("token--->",token);
+        
         if(!token){
+            console.log("no token");
             return res.status(401).json({message: "No token provided , please login"});
         }
         const blacklist=await BlacklistToken.findOne({token});
