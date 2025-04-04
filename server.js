@@ -7,6 +7,8 @@ import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import eWasteRoutes from './routes/eWasteRoutes.js';
 import cookieParser from 'cookie-parser';
+import companyRoutes from "./routes/companyRoutes.js";
+
 
 const app = express();
 const port = 5000;
@@ -29,9 +31,10 @@ mongoose
 
 
 //routes
-app.use('/api/auth', userRoutes);
+app.use('/api/auth/user', userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/e-waste", eWasteRoutes);
+app.use("/api/auth/company", companyRoutes);
 app.use("/uploads", express.static("uploads"));
 
 

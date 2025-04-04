@@ -5,8 +5,14 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-
-
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
 const upload = multer({ storage });
 
@@ -18,8 +24,6 @@ router.post("/upload",  async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    
 
     const newWaste = new EWaste({
       userId,

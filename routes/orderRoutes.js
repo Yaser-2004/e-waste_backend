@@ -13,6 +13,8 @@ const storage = multer.diskStorage({
   },
 });
 
+const upload = multer({ storage });
+
 //get pending ordres
 router.get("/pending-orders", async (req, res) => {
     try {
@@ -108,12 +110,16 @@ router.patch("/picked-status/:id",upload.single("image"), async (req, res) => {
     const imageUrl = `/uploads/${req.file.filename}`;
     const updatedWaste = await EWaste.findByIdAndUpdate(
       id,
-      { status: "Repaired" },
-      {cost:100},
-      {imageUrl},
-      { new: true } );
-      if (!updatedWaste) {
-        return res.status(404).json({ message: "E-Waste not found" });
+      {
+        status: "Repaired",
+        cost: 100,
+        imageUrl
+      },
+      { new: true }
+    );
+
+    if (!updatedWaste) {
+      return res.status(404).json({ message: "E-Waste not found" });
     }
     res.status(200).json(updatedWaste);
 
