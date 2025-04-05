@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     location: { type: String, required: true },
     ecoPoints: {type: Number, default: 0},
+    createdAt: { type: Date, default: Date.now },
 });
 userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
