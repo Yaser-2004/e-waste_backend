@@ -15,6 +15,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+//get by id
+router.get("/order/:id", async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const order = await EWaste.findById(orderId).populate("userId", "firstName email");
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 //get pending ordres
 router.get("/pending-orders", async (req, res) => {
     try {
@@ -29,6 +44,16 @@ router.get("/processed-orders", async (req, res) => {
   try{
     const processedOrders = await EWaste.find({ status: "Processed" }).populate("userId", "firstName email");
     res.json(processedOrders);
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+});
+//get processing orders
+router.get("/processing-orders", async (req, res) => {
+  try{
+    const processingOrders = await EWaste.find({ status: "Processing" }).populate("userId", "firstName email");
+    res.json(processingOrders);
   }
   catch(err){
     res.status(500).json({error:err.message});
