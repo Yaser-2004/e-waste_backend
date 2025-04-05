@@ -153,5 +153,20 @@ router.patch("/picked-status/:id",upload.single("image"), async (req, res) => {
     res.status(500).json({error:err.message});
   }
 });
+//to buy product
+router.delete("/buy/:id",async (req,res)=>{
+  try{
+    const {id}=req.params;
+    const deletewaste=await EWaste.findByIdAndDelete(id);
+    if(!deletewaste){
+      return res.status(404).json({message:"E-Waste not found"});
+    }
+    res.status(200).json({message:"E-Waste item deleted successfully"});
+
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+});
 
 export default router
