@@ -16,7 +16,7 @@ const port = 5000;
 //middleware
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173', // frontend origin
+    origin: '*', // frontend origin
     credentials: true                
   }));
 app.use(cookieParser());
