@@ -29,8 +29,6 @@ router.get("/order/:id", async (req, res) => {
   }
 });
 
-
-
 // GET /product-info
 router.get("/product-info", async (req, res) => {
   try {
@@ -54,22 +52,6 @@ router.get("/product-info", async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  }
-});
-
-
-//to change status of order
-/get by id
-router.get("/order/:id", async (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const order = await EWaste.findById(orderId).populate("userId", "firstName email");
-    if (!order) {
-      return res.status(404).json({ error: "Order not found" });
-    }
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
 });
 
@@ -204,33 +186,6 @@ router.delete("/buy/:id",async (req,res)=>{
   }
   catch(err){
     res.status(500).json({error:err.message});
-  }
-});
-
-
-// GET /product-info
-router.get("/product-info", async (req, res) => {
-  try {
-    const { status } = req.query;
-    const filter = {};
-
-    if (status && status.toLowerCase() !== "all") {
-      filter.status = status;
-    }
-
-    const orders = await EWaste.find(filter).select("_id itemName location createdAt status");
-
-    const result = orders.map(item => ({
-      _id: item._id, // ✅ raw MongoDB ID (used for updates)
-      itemName: item.itemName,
-      location: item.location,
-      date: item.createdAt,
-      status: item.status,
-    }));
-
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 });
 
