@@ -58,6 +58,74 @@ router.get("/product-info", async (req, res) => {
 });
 
 
+//to change status of order
+/get by id
+router.get("/order/:id", async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const order = await EWaste.findById(orderId).populate("userId", "firstName email");
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+//get pending ordres
+router.get("/pending-orders", async (req, res) => {
+    try {
+      const pendingOrders = await EWaste.find({ status: "Pending" }).populate("userId", "firstName email");
+      res.json(pendingOrders);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+//get processed orders
+router.get("/processed-orders", async (req, res) => {
+  try{
+    const processedOrders = await EWaste.find({ status: "Processed" }).populate("userId", "firstName email");
+    res.json(processedOrders);
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+});
+//get processing orders
+router.get("/processing-orders", async (req, res) => {
+  try{
+    const processingOrders = await EWaste.find({ status: "Processing" }).populate("userId", "firstName email");
+    res.json(processingOrders);
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+});
+//recycled orders
+router.get("/recycled-orders",async (req,res)=>{
+  try{
+    const recycledOrders = await EWaste.find({ status: "Recycled" }).populate("userId", "firstName email");
+    res.json(recycledOrders);
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+});
+//go to store
+router.get("/store", async (req, res) => {
+
+  try{
+    const products = await EWaste.find({ status: "Repaired" }).select("imageUrl cost description");
+    res.json(products);
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+});
+
+
 
 //get all orders
 router.get("/all", async (req, res) => {
@@ -109,20 +177,17 @@ router.patch("/picked-status/:id",upload.single("image"), async (req, res) => {
         cost: 100,
         imageUrl
       },
-
-    const updatedWaste = await EWaste.findByIdAndUpdate(
-      id,
-      updateData,
       { new: true }
     );
 
     if (!updatedWaste) {
       return res.status(404).json({ message: "E-Waste not found" });
     }
-
     res.status(200).json(updatedWaste);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
   }
 });
 
