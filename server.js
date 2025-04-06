@@ -16,7 +16,7 @@ const port = 5000;
 //middleware
 app.use(express.json());
 app.use(cors({
-    origin: '*', // frontend origin
+    origin: 'https://e-waste-six.vercel.app', // frontend origin
     credentials: true                
   }));
 app.use(cookieParser());
