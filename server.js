@@ -7,7 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import eWasteRoutes from './routes/eWasteRoutes.js';
 import cookieParser from 'cookie-parser';
-import companyRoutes from "./routes/companyRoutes.js";
+import companyRoutes from "./routes/compRoutes.js";
 
 
 const app = express();
