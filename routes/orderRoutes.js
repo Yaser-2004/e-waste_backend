@@ -92,42 +92,35 @@ router.get("/all", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-//to pick order by company
+//to change status of order
 router.patch("/picked-status/:id", async (req, res) => {
-  try{
-    const {id}=req.params;
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    console.log("Received status:", status);
+    console.log("Received ID:", id);
+    
+    const updateData = { status };
+    if (status === "Repaired") {
+      updateData.cost = 100;
+    }
+
     const updatedWaste = await EWaste.findByIdAndUpdate(
       id,
-      { status: "Processed" },
-      { new: true } );
-      if (!updatedWaste) {
-        return res.status(404).json({ message: "E-Waste not found" });
-    }
-    res.status(200).json(updatedWaste);
+      updateData,
+      { new: true }
+    );
 
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
+    if (!updatedWaste) {
+      return res.status(404).json({ message: "E-Waste not found" });
+    }
+
+    res.status(200).json(updatedWaste);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
-//to update reccycled status
-router.patch("/picked-status/:id", async (req, res) => {
-  try{
-    const {id}=req.params;
-    const updatedWaste = await EWaste.findByIdAndUpdate(
-      id,
-      { status: "Recycled" },
-      { new: true } );
-      if (!updatedWaste) {
-        return res.status(404).json({ message: "E-Waste not found" });
-    }
-    res.status(200).json(updatedWaste);
 
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
-  }
-});
 //to update repaired status
 router.patch("/picked-status/:id",upload.single("image"), async (req, res) => {
   try{
@@ -153,6 +146,7 @@ router.patch("/picked-status/:id",upload.single("image"), async (req, res) => {
     res.status(500).json({error:err.message});
   }
 });
+
 //to buy product
 router.delete("/buy/:id",async (req,res)=>{
   try{
@@ -168,5 +162,33 @@ router.delete("/buy/:id",async (req,res)=>{
     res.status(500).json({error:err.message});
   }
 });
+
+
+// GET /product-info
+router.get("/product-info", async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = {};
+
+    if (status && status.toLowerCase() !== "all") {
+      filter.status = status;
+    }
+
+    const orders = await EWaste.find(filter).select("_id itemName location createdAt status");
+
+    const result = orders.map(item => ({
+      _id: item._id, // ✅ raw MongoDB ID (used for updates)
+      itemName: item.itemName,
+      location: item.location,
+      date: item.createdAt,
+      status: item.status,
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 export default router
