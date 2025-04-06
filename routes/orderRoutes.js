@@ -30,54 +30,30 @@ router.get("/order/:id", async (req, res) => {
 });
 
 
-//get pending ordres
-router.get("/pending-orders", async (req, res) => {
-    try {
-      const pendingOrders = await EWaste.find({ status: "Pending" }).populate("userId", "firstName email");
-      res.json(pendingOrders);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-});
-//get processed orders
-router.get("/processed-orders", async (req, res) => {
-  try{
-    const processedOrders = await EWaste.find({ status: "Processed" }).populate("userId", "firstName email");
-    res.json(processedOrders);
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
-  }
-});
-//get processing orders
-router.get("/processing-orders", async (req, res) => {
-  try{
-    const processingOrders = await EWaste.find({ status: "Processing" }).populate("userId", "firstName email");
-    res.json(processingOrders);
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
-  }
-});
-//recycled orders
-router.get("/recycled-orders",async (req,res)=>{
-  try{
-    const recycledOrders = await EWaste.find({ status: "Recycled" }).populate("userId", "firstName email");
-    res.json(recycledOrders);
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
-  }
-});
-//go to store
-router.get("/store", async (req, res) => {
 
-  try{
-    const products = await EWaste.find({ status: "Repaired" }).select("imageUrl cost description");
-    res.json(products);
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
+// GET /product-info
+router.get("/product-info", async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = {};
+
+    if (status && status.toLowerCase() !== "all") {
+      filter.status = status;
+    }
+
+    const orders = await EWaste.find(filter).select("_id itemName location createdAt status");
+
+    const result = orders.map(item => ({
+      _id: item._id, // ✅ raw MongoDB ID (used for updates)
+      itemName: item.itemName,
+      location: item.location,
+      date: item.createdAt,
+      status: item.status,
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -133,17 +109,20 @@ router.patch("/picked-status/:id",upload.single("image"), async (req, res) => {
         cost: 100,
         imageUrl
       },
+
+    const updatedWaste = await EWaste.findByIdAndUpdate(
+      id,
+      updateData,
       { new: true }
     );
 
     if (!updatedWaste) {
       return res.status(404).json({ message: "E-Waste not found" });
     }
-    res.status(200).json(updatedWaste);
 
-  }
-  catch(err){
-    res.status(500).json({error:err.message});
+    res.status(200).json(updatedWaste);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
